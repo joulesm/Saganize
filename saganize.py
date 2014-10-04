@@ -1,5 +1,6 @@
 from flask import Flask
 from flask import render_template
+from flask import request
 
 app = Flask(__name__)
 
@@ -8,7 +9,7 @@ def homepage():
     return 'Saganize this!!'
 
 @app.route('/search')
-@app.route('/search?q=<query>')
+@app.route('/search/<query>')
 def do_search(query=None):
     #return 'saganized-search on %s' % query
     return render_template('search.html', query = query)
