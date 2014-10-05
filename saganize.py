@@ -13,13 +13,22 @@ def google_search(query):
     res = conn.getresponse()
     data = res.read()
     conn.close()
-    return saganize_searchpage(data)
+    return fix_images(saganize_searchpage(data))
 
 def saganize_searchpage(data):
-    startIndex = data.find("class=\"sd\"") + 28
-    endIndex = data.find("div", startIndex) - 2
-    replace_results = data[startIndex : endIndex]
+    return replace_num_results(fix_images(data))
+
+def replace_num_results(data):
+    sI = data.find("class=\"sd\"") + 28
+    eI = data.find("div", sI) - 2
+    replace_results = data[sI : eI]
     return data.replace(replace_results, "Billions and billions of results")
+
+def fix_images(data):
+    img = '<a href="/webhp?hl=en" style="background:url(/images/nav_logo176.png) no-repeat 0 -41px;height:37px;width:95px;display:block" id="logo" title="Go to Google Home"></a>'
+    img_replace = '<a href="www.google.com/search?q=carl+sagan"><img src="http://carlsaganday.com/wp-content/uploads/2013/09/carlsagan.jpg" height="37px" width="95px"></a>'
+    return data.replace(img, img_replace)
+    #return data.replace("/images/nav_logo176.png", "http://www.google.com/images/nav_logo176.png")
 
 @app.route('/')
 def homepage():
@@ -28,7 +37,8 @@ def homepage():
 @app.route('/search')
 @app.route('/search/<query>')
 def do_search(query=None):
-    return google_search(query)
+    science_query = query + ' carl sagan'
+    return google_search(science_query)
     #return render_template('search.html', query = query)
 
 if __name__ == '__main__':
