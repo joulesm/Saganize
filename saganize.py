@@ -12,16 +12,17 @@ import textparser
 app = Flask(__name__)
 
 def google_search(query):
-    url = "/search?q=" + urllib.quote_plus(sciencify_query(query))
+    sciencified_query = sciencify_query(query)
+    url = "/search?q=" + urllib.quote_plus(sciencified_query)
     conn = httplib.HTTPConnection("www.google.com")
     conn.request("GET", url)
     res = conn.getresponse()
     data = res.read()
     conn.close()
-    return saganize_searchpage(data, query)
+    return saganize_searchpage(data, query, sciencified_query)
 
-def saganize_searchpage(data, query):
-    return add_onebox((replace_black_bar(replace_num_results(replace_shopping(fix_images(data))))), query)
+def saganize_searchpage(data, query, sciencified_query):
+    return add_onebox((replace_black_bar(replace_num_results(replace_shopping(fix_images(data))))), query, sciencified_query)
 
 def replace_black_bar(data):
     search_skipped = False
@@ -36,9 +37,12 @@ def replace_black_bar(data):
                 j += 1
     return data
 
-def add_onebox(data, query):
+def add_onebox(data, query, sciencified_query):
     onebox = '<li class="g"><div id="_vBb"><span class="_m3b">carl_sagan_cosmos_quote</span><div class="_eGc"> - Carl Sagan, Cosmos </div><br></div></li>'
-    quote = textparser.matchLineToQuery(query)
+    if query:
+        quote = textparser.matchLineToQuery(query)
+    else:
+        quote = textparser.matchLineToQuery(sciencified_query)
     sI = data.find('id="ires"') + 14
     return data[:sI] + onebox.replace('carl_sagan_cosmos_quote', quote) + data[sI:]
 
@@ -67,7 +71,7 @@ def homepage():
 
 @app.route('/search')
 @app.route('/search/<query>')
-def do_search(query=None):
+def do_search(query=''):
     return google_search(query)
     #return render_template('search.html', query = query)
 
