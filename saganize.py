@@ -20,7 +20,25 @@ def google_search(query):
     return fix_images(saganize_searchpage(data))
 
 def saganize_searchpage(data):
-    return replace_num_results(replace_shopping(fix_images(data)))
+    return replace_black_bar(add_onebox(replace_num_results(replace_shopping(fix_images(data)))))
+
+def replace_black_bar(data):
+    search_skipped = False
+    j = 0
+    for i in range(len(data)):
+        gbts = 'class=gbts'
+        if data[i : i + len(gbts)] == gbts:
+            sI = i + len(gbts) + 1
+            eI = data.find('</span>', i)
+            if data[sI : eI] in science_list.gList:
+                data = data[:sI] + science_list.new_gList[j] + data[eI:]
+                j += 1
+    return data
+
+def add_onebox(data):
+    onebox = '<li class="g"><div id="_vBb"><span class="_m3b">carl_sagan_cosmos_quote</span><div class="_eGc"> - Carl Sagan, Cosmos </div><br></div></li>'
+    sI = data.find('id="ires"') + 14
+    return data[:sI] + onebox + data[sI:]
 
 def replace_num_results(data):
     sI = data.find("class=\"sd\"") + 28
@@ -33,7 +51,7 @@ def replace_shopping(data):
 
 def fix_images(data):
     img = '<a href="/webhp?hl=en" style="background:url(/images/nav_logo176.png) no-repeat 0 -41px;height:37px;width:95px;display:block" id="logo" title="Go to Google Home"></a>'
-    img_replace = '<a href="www.google.com/search?q=carl+sagan" style="margin-left:12px;margin-top:12px;position:absolute;"><img src="http://carlsaganday.com/wp-content/uploads/2013/09/carlsagan.jpg" height="37px" width="95px"></a>'
+    img_replace = '<a href="www.google.com/search?q=carl+sagan" style="margin-left:25px;margin-top:12px;position:absolute;"><img src="http://carlsaganday.com/wp-content/uploads/2013/09/carlsagan.jpg" height="37px"></a>'
     return data.replace(img, img_replace)
     #return data.replace("/images/nav_logo176.png", "http://www.google.com/images/nav_logo176.png").replace("http://www.google.comhttp://www.google.com", "http://www.google.com")
     #return data

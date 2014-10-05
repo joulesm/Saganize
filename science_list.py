@@ -1,3 +1,26 @@
+# google properties in the black bar
+gList = [
+    "Images",
+    "Maps",
+    "Play",
+    "YouTube",
+    "News",
+    "Gmail",
+    "Drive",
+]
+
+# replace google properties in the black bar
+new_gList = [
+    "Math",
+    "Astonomy",
+    "Cosmology",
+    "Physics",
+    "Chemistry",
+    "Biology",
+    "Geology",
+]
+
+# list of science terms to add to search
 sList = [
     "science",
     "carl sagan",
