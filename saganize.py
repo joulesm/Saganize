@@ -2,17 +2,24 @@ from flask import Flask
 from flask import render_template
 from flask import request
 import httplib
+import urllib
 
 app = Flask(__name__)
 
 def google_search(query):
-    url = "/search?q=" + query
+    url = "/search?q=" + urllib.quote_plus(query)
     conn = httplib.HTTPConnection("www.google.com")
     conn.request("GET", url)
     res = conn.getresponse()
     data = res.read()
     conn.close()
-    return data
+    return saganize_searchpage(data)
+
+def saganize_searchpage(data):
+    startIndex = data.find("class=\"sd\"") + 28
+    endIndex = data.find("div", startIndex) - 2
+    replace_results = data[startIndex : endIndex]
+    return data.replace(replace_results, "Billions and billions of results")
 
 @app.route('/')
 def homepage():
