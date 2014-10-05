@@ -70,6 +70,7 @@ def homepage():
     return 'Saganize this!!'
 
 @app.route('/search')
+@app.route('/search/')
 @app.route('/search/<query>')
 def do_search(query=''):
     return google_search(query)
