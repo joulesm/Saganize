@@ -80,4 +80,4 @@ if __name__ == '__main__':
     # auto reloads the server on changes, also enables debugging
     app.debug = True
     # server is publicly available
-    app.run(host='0.0.0.0')
+    app.run(host='0.0.0.0', port=8000)
