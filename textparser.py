@@ -1,3 +1,4 @@
+import os
 import string
 import operator
 import nltk
@@ -30,8 +31,11 @@ def wordCounter():
             fileName = "./transcripts/ep0" + str(i + 1) + ".txt"
         else:
             fileName = "./transcripts/ep" + str(i + 1) + ".txt"
-        with open(fileName, 'r') as f:
+        print "fileName: ", fileName
+	with open(fileName, 'r') as f:
+            print "readeing ", fileName,"..."
             readData = f.read()
+            print "...finished"
         words = readData.translate(string.maketrans("",""), string.punctuation).split()
         for w in words:
             try:
@@ -63,12 +67,16 @@ def matchLineToQuery(query):
     numWords = len(wordsInQuery)
 
     print wordsInQuery
-    
+
+    fileName = os.path.dirname(os.path.realpath(__file__)) + "/transcripts/full.txt"
+
     #first run
-    fileName = "./transcripts/full.txt"
+    #fileName = "./transcripts/full.txt"
         
     scoreOfLines = []
+    print "opening:", fileName
     with open(fileName, 'r') as f:
+        print "got it"
         for line in f:
             wordsInLine = line.lower().translate(string.maketrans("",""), string.punctuation).split()
             score = 0
